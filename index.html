@@ -1,0 +1,194 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>StrukturLab: Stack & Queue</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0f172a;--card:rgba(30,41,59,.72);--p:#6366f1;--s:#06b6d4;--a:#10b981;--t:#e2e8f0;--m:#94a3b8;--r:#f43f5e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 12% 0,#312e81,transparent 40%),radial-gradient(circle at 92% 18%,#164e63,transparent 35%);background-color:#0f172a;color:var(--t);font:15px/1.6 'Plus Jakarta Sans',system-ui,sans-serif}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;backdrop-filter:blur(14px);background:rgba(15,23,42,.8);border-bottom:1px solid #334155;padding:10px 16px}
+h1{font-size:19px;margin:0 0 8px;font-weight:800}h2{margin:0 0 8px;font-size:24px}h3{margin:0 0 8px}
+nav{display:flex;gap:6px;overflow-x:auto}nav button{white-space:nowrap}
+button{font:inherit;cursor:pointer;border:1px solid #334155;background:#1e293b;color:var(--t);border-radius:12px;padding:8px 14px;transition:.2s}
+button:hover:not(:disabled){border-color:var(--s);transform:translateY(-1px)}button:disabled{opacity:.4;cursor:not-allowed}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--s);outline-offset:2px}
+nav button.on,.pri{background:linear-gradient(135deg,var(--p),#8b5cf6);border-color:transparent;font-weight:600}
+.ok{background:var(--a);color:#022;border-color:transparent;font-weight:600}.bad{background:var(--r);border-color:transparent}
+main{max-width:1000px;margin:0 auto;padding:18px 14px 60px}.view{display:none}.view.on{display:block}
+.card{background:var(--card);border:1px solid #33415588;border-radius:20px;padding:18px;margin-bottom:14px;backdrop-filter:blur(8px)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.pill{display:inline-block;border-radius:99px;padding:2px 12px;font-size:12px;background:#334155;margin:2px}.pill.d{background:var(--a);color:#022}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+input,textarea{font:inherit;background:#0f172a;color:var(--t);border:1px solid #475569;border-radius:12px;padding:8px 12px;width:100%}.row input{width:130px}
+.vis{display:flex;gap:8px;min-height:90px;padding:26px 14px 14px;border:2px dashed #334155;border-radius:16px;overflow-x:auto;align-items:center}
+.sv{flex-direction:column-reverse;justify-content:flex-start;min-height:250px}
+.chip{position:relative;padding:9px 16px;border-radius:12px;background:linear-gradient(135deg,var(--p),#8b5cf6);font-weight:700;min-width:96px;text-align:center;flex:none}
+.chip.q{background:linear-gradient(135deg,var(--s),#0891b2);min-width:72px}
+.chip i{position:absolute;top:-10px;font-style:normal;font-size:10px;background:var(--a);color:#022;border-radius:99px;padding:0 8px}.chip i.l{left:-6px}.chip i.r{right:-6px}
+.tw{overflow-x:auto;max-height:230px;overflow-y:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:5px 8px;border-bottom:1px solid #334155;text-align:left}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.tabs .on{background:var(--p)}
+.msg{min-height:24px;color:var(--s);font-weight:600}.lv{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.term{display:inline-block;padding:6px 14px;margin:4px;border-radius:10px;background:var(--p);cursor:grab;font-weight:700}.term.sel{outline:2px solid #fff}
+.slot{display:flex;gap:10px;align-items:center;padding:8px;border:1px dashed #475569;border-radius:12px;margin:6px 0}.slot .z{min-width:100px;min-height:34px;border-radius:8px;background:#0f172a;text-align:center;padding:4px}
+.slot.hi{border-color:var(--s);background:#06b6d422}.slot.done .z{background:var(--a);color:#022;font-weight:700}
+#ord li{padding:8px 12px;margin:5px 0;border-radius:10px;background:#1e293b;border:1px solid #475569;cursor:grab;list-style:none}
+#modal{position:fixed;inset:0;background:#000a;display:none;place-items:center;z-index:20}#modal.on{display:grid}#modal .card{max-width:380px;text-align:center;background:#1e293b}
+.bar{height:8px;border-radius:9px;background:#334155;overflow:hidden}.bar div{height:100%;width:0;background:linear-gradient(90deg,var(--s),var(--a));transition:.4s}
+.fig{display:block;width:100%;max-width:440px;margin:0 auto 12px;background:#0f172a99;border-radius:16px}.fig *{transform-box:fill-box}.fig text{font:600 12px 'Plus Jakarta Sans',sans-serif;fill:#e2e8f0}
+.p1{animation:p1 8s infinite}.p2{animation:p2 8s infinite}.p3{animation:p3 8s infinite}.t1{animation:t1 8s infinite}.t2{animation:t2 8s infinite}.c1{animation:c1 8s infinite}.c2{animation:c2 8s infinite}.c3{animation:c3 8s infinite}
+@keyframes p1{0%{transform:translateY(-110px);opacity:0}8%,90%{transform:none;opacity:1}100%{opacity:0}}
+@keyframes p2{0%,14%{transform:translateY(-110px);opacity:0}22%,90%{transform:none;opacity:1}100%{opacity:0}}
+@keyframes p3{0%,28%{transform:translateY(-110px);opacity:0}36%,55%{transform:none;opacity:1}68%,100%{transform:translateY(-90px);opacity:0}}
+@keyframes t1{0%,50%{opacity:1}54%,100%{opacity:0}}@keyframes t2{0%,54%{opacity:0}58%,92%{opacity:1}100%{opacity:0}}
+@keyframes c1{0%{transform:translateX(220px);opacity:0}10%,55%{transform:none;opacity:1}68%,100%{transform:translateX(-160px);opacity:0}}
+@keyframes c2{0%,12%{transform:translateX(220px);opacity:0}22%,68%{transform:none;opacity:1}78%,92%{transform:translateX(-80px);opacity:1}100%{transform:translateX(-80px);opacity:0}}
+@keyframes c3{0%,24%{transform:translateX(220px);opacity:0}34%,68%{transform:none;opacity:1}78%,92%{transform:translateX(-80px);opacity:1}100%{transform:translateX(-80px);opacity:0}}
+@media(prefers-reduced-motion:reduce){.fig *{animation:none!important}}
+.av{display:block;font-size:26px;line-height:1.15}.case{background:#0f172a99;border:1px solid #334155;border-radius:14px;padding:10px 12px}.case b{display:block}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<header><h1>🧱 StrukturLab · Stack &amp; Queue</h1><nav id="nav"></nav></header>
+<main>
+<section class="view" id="v-home">
+<div class="card"><h2>Selamat datang, Kelas X!</h2><p>Pelajari struktur data linear lewat materi, lab maya, 10 level game, dan LKPD. Selesaikan semuanya untuk mengunduh sertifikat PDF.</p>
+<div class="bar"><div id="pb"></div></div><div id="chk" style="margin-top:8px"></div></div>
+<h3>Tujuan Pembelajaran</h3><div class="grid">
+<div class="card"><h3>🎯 TP 1</h3>Menjelaskan konsep dasar struktur data linear (Stack &amp; Queue) beserta analogi kehidupan nyata.</div>
+<div class="card"><h3>🎯 TP 2</h3>Mengidentifikasi dan membedakan operasi Stack (Push, Pop, Tos) dan Queue (Enqueue, Dequeue, Front, Rear).</div>
+<div class="card"><h3>🎯 TP 3</h3>Menganalisis dan mensimulasikan mekanisme LIFO dan FIFO.</div></div>
+<button class="pri" onclick="show('materi')">Mulai belajar</button></section>
+
+<section class="view" id="v-materi"><div class="tabs" id="mt"></div><div class="card" id="mb"></div></section>
+
+<section class="view" id="v-lab"><div class="card" id="lab-s"></div><div class="card" id="lab-q"></div></section>
+
+<section class="view" id="v-game"><div class="lv" id="lv"></div><div class="card" id="gb"></div></section>
+
+<section class="view" id="v-lkpd">
+<div class="card"><h3>Bagian A · Cocokkan istilah dengan definisi</h3><p style="color:var(--m)">Tarik istilah ke kotak yang sesuai (di ponsel: ketuk istilah, lalu ketuk kotak).</p><div id="bank"></div><div id="slots"></div><div class="msg" id="lm"></div></div>
+<div class="card"><h3>Bagian B · Urutkan instruksi</h3><p>Stack kosong. Susun instruksi agar isi akhir Stack adalah <b>[A, C]</b>. Tarik untuk mengubah urutan.</p><ul id="ord" style="padding:0"></ul><button class="pri" onclick="chkOrd()">Periksa urutan</button> <span class="msg" id="om"></span></div>
+<div class="card">Skor LKPD: <b id="ls">0</b>/100</div></section>
+
+<section class="view" id="v-ref"><div class="card"><h3>Refleksi mandiri</h3>
+<label>Nama lengkap<input id="nm"></label><label>Kelas<input id="kl" value="X-"></label>
+<label>Catatan pemahaman<textarea id="cp" rows="3"></textarea></label>
+<label>Contoh Stack/Queue di rumahmu<textarea id="ct" rows="3"></textarea></label>
+<div class="row"><button class="ok" id="fin" disabled onclick="finish()">🎓 FINISH &amp; DOWNLOAD PDF</button></div><div id="chk2"></div></div></section>
+</main>
+<div id="modal"><div class="card" id="mc"></div></div>
+<div id="cert" style="position:fixed;left:-10000px;top:0;width:700px;background:#fff;color:#111;padding:40px;font-family:Arial,sans-serif"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),esc=s=>{const d=document.createElement('div');d.textContent=s;return d.innerHTML};
+const anim=(...a)=>window.gsap&&gsap.from(...a);
+const ST={mat:new Set([0]),lab:new Set(),game:{},m:0,ord:false};
+const V=[['home','🏠 Beranda'],['materi','📖 Materi'],['lab','🧪 Lab Maya'],['game','🎮 Game'],['lkpd','✍️ LKPD'],['ref','🎓 Refleksi']];
+$('#nav').innerHTML=V.map(v=>`<button data-v="${v[0]}">${v[1]}</button>`).join('');
+$('#nav').onclick=e=>e.target.dataset.v&&show(e.target.dataset.v);
+function show(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id=='v-'+v));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v==v));scrollTo(0,0);anim('#v-'+v,{opacity:0,duration:.35});prog()}
+const lkS=()=>Math.round((ST.m+(ST.ord?1:0))/10*100),gN=()=>Object.keys(ST.game).length;
+const gAvg=()=>gN()?Math.round(Object.values(ST.game).reduce((a,b)=>a+b,0)/gN()):0;
+function prog(){const f=[['Materi',ST.mat.size==3],['Lab Maya',ST.lab.size==4],['Game '+gN()+'/10',gN()==10],['LKPD',ST.m==9&&ST.ord]];
+const h=f.map(x=>`<span class="pill ${x[1]?'d':''}">${x[1]?'✓':'○'} ${x[0]}</span>`).join('');
+$('#chk').innerHTML=$('#chk2').innerHTML=h;$('#pb').style.width=f.filter(x=>x[1]).length*25+'%';$('#fin').disabled=!f.every(x=>x[1]);$('#ls').textContent=lkS()}
+
+// MATERI
+const M=[['Struktur Data Linear vs Non-Linear',`<p><b>Linear:</b> elemen tersusun berurutan, satu demi satu (Array, Stack, Queue). Seperti rak supermarket yang berderet lurus dari lorong 1 sampai lorong terakhir.</p><p><b>Non-linear:</b> elemen bercabang atau saling terhubung (Tree, Graph). Seperti peta swalayan dengan banyak jalur ke setiap rak.</p><p>Stack dan Queue sama-sama linear. Bedanya ada pada <i>dari mana</i> data masuk dan keluar.</p>`],
+['Stack (LIFO)',`<p><b>LIFO: Last In First Out.</b> Yang terakhir masuk, pertama keluar.</p><p>Analogi: tumpukan piring prasmanan, tumpukan buku, tumpukan uang logam. Piring paling atas yang diambil lebih dulu.</p><ul><li><b>Push</b>: menambah elemen di atas tumpukan.</li><li><b>Pop</b>: mengambil elemen paling atas.</li><li><b>Tos (Top of Stack)</b>: penunjuk elemen teratas.</li></ul>`],
+['Queue (FIFO)',`<p><b>FIFO: First In First Out.</b> Yang pertama masuk, pertama keluar.</p><p>Analogi: antrean kasir supermarket, loket tiket KRL, antrean SPBU. Yang datang lebih dulu dilayani lebih dulu.</p><ul><li><b>Enqueue</b>: masuk antrean lewat belakang.</li><li><b>Dequeue</b>: keluar dari antrean lewat depan.</li><li><b>Front</b>: elemen terdepan.</li><li><b>Rear</b>: elemen terbelakang.</li></ul>`]];
+const IMG=[`<svg class="fig" viewBox="0 0 400 210" role="img" aria-label="Linear dan non-linear"><text x="100" y="24" text-anchor="middle">Linear (berderet)</text><text x="300" y="24" text-anchor="middle">Non-linear (bercabang)</text><rect x="12" y="90" width="32" height="32" rx="6" fill="#6366f1"/><rect x="50" y="90" width="32" height="32" rx="6" fill="#6366f1"/><rect x="88" y="90" width="32" height="32" rx="6" fill="#6366f1"/><rect x="126" y="90" width="32" height="32" rx="6" fill="#6366f1"/><rect x="164" y="90" width="32" height="32" rx="6" fill="#6366f1"/><circle cy="106" r="7" fill="#10b981"><animate attributeName="cx" values="28;66;104;142;180;28" dur="5s" repeatCount="indefinite"/></circle><g stroke="#94a3b8" stroke-width="2"><line x1="300" y1="60" x2="255" y2="110"/><line x1="300" y1="60" x2="345" y2="110"/><line x1="255" y1="110" x2="230" y2="160"/><line x1="255" y1="110" x2="280" y2="160"/><line x1="345" y1="110" x2="345" y2="160"/></g><circle cx="300" cy="60" r="12" fill="#06b6d4"><animate attributeName="r" values="12;17;12" dur="3s" begin="0s" repeatCount="indefinite"/></circle><circle cx="255" cy="110" r="12" fill="#06b6d4"><animate attributeName="r" values="12;17;12" dur="3s" begin="0.5s" repeatCount="indefinite"/></circle><circle cx="345" cy="110" r="12" fill="#06b6d4"><animate attributeName="r" values="12;17;12" dur="3s" begin="0.5s" repeatCount="indefinite"/></circle><circle cx="230" cy="160" r="12" fill="#06b6d4"><animate attributeName="r" values="12;17;12" dur="3s" begin="1s" repeatCount="indefinite"/></circle><circle cx="280" cy="160" r="12" fill="#06b6d4"><animate attributeName="r" values="12;17;12" dur="3s" begin="1s" repeatCount="indefinite"/></circle><circle cx="345" cy="160" r="12" fill="#06b6d4"><animate attributeName="r" values="12;17;12" dur="3s" begin="1s" repeatCount="indefinite"/></circle></svg>`,`<svg class="fig" viewBox="0 0 400 210" role="img" aria-label="Animasi Push dan Pop pada Stack"><line x1="130" y1="184" x2="270" y2="184" stroke="#94a3b8" stroke-width="3"/><g class="p1"><rect x="140" y="160" width="120" height="22" rx="8" fill="#6366f1"/><text x="200" y="175" text-anchor="middle">Piring 1</text></g><g class="p2"><rect x="140" y="134" width="120" height="22" rx="8" fill="#8b5cf6"/><text x="200" y="149" text-anchor="middle">Piring 2</text></g><g class="p3"><rect x="140" y="108" width="120" height="22" rx="8" fill="#06b6d4"/><text x="200" y="123" text-anchor="middle">Piring 3</text></g><text class="t1" x="200" y="22" text-anchor="middle">Push: tumpuk dari atas</text><text class="t2" x="200" y="22" text-anchor="middle" style="opacity:0">Pop: ambil yang teratas (LIFO)</text></svg>`,`<svg class="fig" viewBox="0 0 400 210" role="img" aria-label="Animasi Enqueue dan Dequeue pada Queue"><g class="c1"><rect x="90" y="80" width="64" height="44" rx="10" fill="#06b6d4"/><text x="122" y="107" text-anchor="middle">Pelanggan 1</text></g><g class="c2"><rect x="170" y="80" width="64" height="44" rx="10" fill="#0891b2"/><text x="202" y="107" text-anchor="middle">Pelanggan 2</text></g><g class="c3"><rect x="250" y="80" width="64" height="44" rx="10" fill="#0e7490"/><text x="282" y="107" text-anchor="middle">Pelanggan 3</text></g><text x="90" y="150" >FRONT</text><text x="318" y="150" text-anchor="end">REAR</text><path d="M60 170h280" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4"/><text class="t1" x="200" y="30" text-anchor="middle">Enqueue: masuk dari belakang</text><text class="t2" x="200" y="30" text-anchor="middle" style="opacity:0">Dequeue: keluar dari depan (FIFO)</text></svg>`];
+const EVD=[['Linear vs Non-Linear',[['🎵','Daftar putar lagu','Linear: lagu diputar satu per satu berurutan.'],['📁','Folder di laptop','Non-linear: folder bercabang ke subfolder (Tree).'],['🗺️','Peta jalan','Non-linear: satu tempat bisa dicapai lewat banyak jalur (Graph).']]],
+['Kasus Stack di sekitarmu',[['↩️','Undo (Ctrl+Z)','Aksi terakhir yang kamu lakukan dibatalkan lebih dulu.'],['🌐','Tombol Back browser','Halaman terakhir yang dibuka adalah yang pertama kamu tinggalkan.'],['🧳','Koper &amp; lemari','Baju paling atas diambil lebih dulu.'],['🍽️','Piring prasmanan','Piring teratas diambil, piring bersih ditumpuk di atas.']]],
+['Kasus Queue di sekitarmu',[['🛒','Kasir minimarket','Pembeli yang datang lebih dulu dibayar lebih dulu.'],['🚆','Loket tiket KRL','Petugas melayani orang paling depan.'],['⛽','Antrean SPBU','Kendaraan dilayani sesuai urutan datang.'],['🖨️','Antrean printer','Dokumen dicetak sesuai urutan dikirim.'],['🛵','Pesanan ojek online','Pesanan lama diproses lebih dulu.']]]];
+const EV=EVD.map(e=>`<h3 style="margin-top:14px">🌍 ${e[0]}: contoh sehari-hari</h3><div class="grid">${e[1].map(c=>`<div class="case"><span class="av" style="font-size:28px">${c[0]}</span><b>${c[1]}</b>${c[2]}</div>`).join('')}</div>`);
+$('#mt').innerHTML=M.map((m,i)=>`<button data-i="${i}">${m[0]}</button>`).join('');
+function mat(i){ST.mat.add(i);document.querySelectorAll('#mt button').forEach((b,j)=>b.classList.toggle('on',i==j));$('#mb').innerHTML=`<h2>${M[i][0]}</h2>${IMG[i]}${M[i][1]}${EV[i]}`;anim('#mb',{x:30,opacity:0,duration:.4});prog()}
+$('#mt').onclick=e=>e.target.dataset.i&&mat(+e.target.dataset.i);mat(0);
+
+// VISUAL BERSAMA
+function draw(box,a,S,ic){box.innerHTML=a.map((x,i)=>`<div class="chip ${S?'':'q'}">${ic?`<span class="av">${ic(x)}</span>`:''}${esc(x)}${S?(i==a.length-1?'<i class="r">TOS</i>':''):(i==0?'<i class="l">FRONT</i>':'')+(i==a.length-1?'<i class="r">REAR</i>':'')}</div>`).join('')||`<span style="color:var(--m)">${S?'Stack':'Queue'} kosong</span>`;
+if(ic&&window.gsap)box.querySelectorAll('.av').forEach(v=>gsap.to(v,{rotate:6,duration:1.1,yoyo:true,repeat:-1,ease:'sine.inOut'}))}
+const bob=el=>{const v=el&&el.querySelector('.av');v&&window.gsap&&gsap.to(v,{y:-9,duration:.12,repeat:9,yoyo:true})};
+function addA(box,a,S,x,ic){a.push(x);draw(box,a,S,ic);const el=box.lastElementChild;anim(el,S?{y:-120,opacity:0,duration:.5,ease:'bounce.out'}:{x:180,opacity:0,duration:1.1,ease:'none'});bob(el)}
+function remA(box,a,S,cb,ic){const el=S?box.lastElementChild:box.firstElementChild,v=S?a[a.length-1]:a[0];bob(el);
+const fin=()=>{S?a.pop():a.shift();draw(box,a,S,ic);cb&&cb(v)};window.gsap?gsap.to(el,S?{y:-90,opacity:0,duration:.4,onComplete:fin}:{x:-160,opacity:0,duration:1.1,ease:'none',onComplete:fin}):fin();return v}
+
+// LAB MAYA
+function lab(el,S,SC){const a=[],CAP=6;let n=0;const N=S?['Push','Pop']:['Enqueue','Dequeue'];
+el.innerHTML=`<h3>${S?'Simulator Stack (LIFO)':'Simulator Queue (FIFO)'}</h3><div class="row ma"><input maxlength="8" placeholder="Elemen"><button class="pri">${N[0]}</button><button>${N[1]}</button><span class="msg"></span></div><div class="row sc"><span>🌍 Kasus sehari-hari:</span>${SC.map((c,i)=>`<button data-i="${i}">${c[0]}</button>`).join('')}<button class="bad" data-r="1">↺ Muat ulang</button></div><p class="ex" style="color:var(--m);margin:4px 0">Pilih satu kasus untuk memuatnya ke simulator.</p><div class="vis ${S?'sv':''}"></div><div class="tw"><table><thead><tr><th>No</th><th>Instruksi</th><th>Isi</th><th>Hasil ${N[1]}</th><th>${S?'Tos':'Front / Rear'}</th></tr></thead><tbody></tbody></table></div>`;
+const [inp,b1,b2,msg]=[el.querySelector('input'),...el.querySelectorAll('.ma button'),el.querySelector('.msg')],box=el.querySelector('.vis'),tb=el.querySelector('tbody');
+const stat=()=>!a.length?'-':S?a[a.length-1]:a[0]+' / '+a[a.length-1];
+const row=(ins,res)=>{tb.insertAdjacentHTML('afterbegin',`<tr><td>${++n}</td><td>${esc(ins)}</td><td>[${a.map(esc).join(', ')}]</td><td>${esc(res)}</td><td>${esc(stat())}</td></tr>`)};
+draw(box,a,S);let tm=[];
+el.querySelector('.sc').onclick=e=>{if(e.target.dataset.r){tm.forEach(clearTimeout);tm=[];a.length=0;tb.innerHTML='';n=0;msg.textContent='';inp.value='';el.querySelector('.ex').textContent='Pilih satu kasus untuk memuatnya ke simulator.';draw(box,a,S);return}const i=e.target.dataset.i;if(i==null)return;const c=SC[i];tm.forEach(clearTimeout);tm=[];a.length=0;tb.innerHTML='';n=0;msg.textContent='';draw(box,a,S);el.querySelector('.ex').innerHTML='<b>'+c[0]+':</b> '+c[2]+' Sekarang coba <b>'+N[1]+'</b>!';c[1].forEach((v,k)=>tm.push(setTimeout(()=>{addA(box,a,S,v);row(N[0]+'('+v+')','-')},500*(k+1))))};
+b1.onclick=()=>{const v=inp.value.trim();if(!v){msg.textContent='Isi elemen dulu.';return}
+if(a.length>=CAP){msg.textContent='Overflow! Kapasitas '+CAP+' penuh.';return}msg.textContent='';addA(box,a,S,v);row(N[0]+'('+v+')','-');inp.value='';ST.lab.add(S?0:2);prog()};
+b2.onclick=()=>{if(!a.length){msg.textContent='Underflow! '+(S?'Stack':'Queue')+' kosong.';return}msg.textContent='';const ins=N[1]+'()';remA(box,a,S,v=>{row(ins,v)});ST.lab.add(S?1:3);prog()};
+inp.onkeydown=e=>{if(e.key=='Enter')b1.click()}}
+lab($('#lab-s'),true,[['↩️ Undo','Ketik|Tebalkan|Warnai'.split('|'),'setiap aksi di Word/Docs di-Push ke tumpukan. Ctrl+Z melakukan Pop: aksi terakhir (Warnai) dibatalkan lebih dulu.'],['🌐 Back browser','Google|YouTube|Wikipedia'.split('|'),'setiap halaman yang dibuka di-Push. Tombol Back melakukan Pop: halaman terakhir ditinggalkan lebih dulu.'],['🍽️ Piring','Piring1|Piring2|Piring3'.split('|'),'piring bersih ditumpuk (Push), pengunjung mengambil dari atas (Pop).']]);
+lab($('#lab-q'),false,[['🖨️ Printer','Tugas1|Tugas2|Tugas3'.split('|'),'dokumen masuk antrean cetak (Enqueue). Yang dikirim pertama dicetak pertama (Dequeue).'],['🚆 Loket KRL','Rina|Dodo|Sari'.split('|'),'calon penumpang antre di Rear. Petugas melayani orang di Front.'],['🎵 Antrean lagu','LaguA|LaguB|LaguC'.split('|'),'lagu yang ditambahkan ke antrean Spotify diputar sesuai urutan masuk.']]);
+
+// GAME
+const EMJ={Andi:'🧑',Budi:'👦',Cici:'👧',Dedi:'👨',Eka:'👩',Fani:'🧓',Kaos:'👕',Kemeja:'👔',Jaket:'🧥',Celana:'👖',Dasi:'🧣'};
+const EM=x=>EMJ[x]||(x.startsWith('Piring')?'🍽️':'🧍');
+const hp=()=>window.gsap&&gsap.fromTo('#hp',{y:0,rotate:-10},{y:-10,rotate:10,duration:.16,yoyo:true,repeat:3,onComplete:()=>gsap.set('#hp',{y:0,rotate:0})});
+const K=['antrean kasir minimarket: pembeli yang datang lebih dulu dibayar lebih dulu.','loket tiket KRL: petugas selalu melayani orang paling depan.','antrean SPBU dengan jalur terbatas: kendaraan baru menunggu sampai ada yang selesai.','antrean dokter: pasien tidak bisa dipanggil kalau ruang tunggu kosong.','antrean ojek online: pesanan lama diproses lebih dulu, pesanan baru menunggu di belakang.','prasmanan pernikahan: piring bersih ditumpuk satu per satu.','kantin: piring selalu diambil dari tumpukan paling atas.','mencari kemeja di lemari: jaket yang menindihnya harus diangkat dulu.','koper penuh: barang teratas harus dikeluarkan sebelum menambah yang baru.','merapikan tumpukan buku di meja belajar: buku yang tertimpa harus menunggu.'];
+const G=[[0,'🍔 Restoran: 3 pelanggan datang berurutan. Enqueue semuanya.',5,[],['Andi','Budi','Cici'],['Andi','Budi','Cici']],
+[0,'🍔 Layani 2 pelanggan terdepan (Dequeue), sisakan Cici.',5,['Andi','Budi','Cici'],[],['Cici']],
+[0,'🍔 Kapasitas 4. Layani Andi dulu agar semua pelanggan baru muat.',4,['Andi','Budi'],['Cici','Dedi','Eka'],['Budi','Cici','Dedi','Eka']],
+[0,'🍔 Kapasitas 3. Hindari underflow dan overflow. Sisakan hanya Cici.',3,['Andi'],['Budi','Cici'],['Cici']],
+[0,'🍔 Kapasitas 3, banyak pelanggan. Akhirnya hanya Eka dan Fani yang tersisa.',3,['Andi','Budi'],['Cici','Dedi','Eka','Fani'],['Eka','Fani']],
+[1,'🍽️ Prasmanan: Push 3 piring berurutan.',5,[],['Piring1','Piring2','Piring3'],['Piring1','Piring2','Piring3']],
+[1,'🍽️ Ambil 2 piring teratas (Pop), sisakan Piring1.',5,['Piring1','Piring2','Piring3'],[],['Piring1']],
+[1,'👕 Lemari: ambil Kemeja di bawah Jaket, lalu pasang Jaket kembali.',5,['Kaos','Kemeja','Jaket'],['Jaket'],['Kaos','Jaket']],
+[1,'👕 Lemari penuh (3). Buang Celana teratas, ganti dengan Dasi.',3,['Kaos','Kemeja','Celana'],['Dasi'],['Kaos','Kemeja','Dasi']],
+[1,'🍽️ Kapasitas 3. Hasil akhir: Piring1, Piring3, Piring5. Gunakan Push &amp; Pop seefisien mungkin.',3,['Piring1','Piring2'],['Piring3','Piring4','Piring5'],['Piring1','Piring3','Piring5']]];
+let gi=0,g;
+function lvBar(){$('#lv').innerHTML=G.map((_,i)=>`<button data-i="${i}" ${i>gN()?'disabled':''} class="${i==gi?'on pri':''}">${ST.game[i]!=null?'✓ ':''}${i+1}</button>`).join('')}
+$('#lv').onclick=e=>e.target.dataset.i&&play(+e.target.dataset.i);
+function play(i){gi=i;const L=G[i],S=!!L[0];g={a:L[3].slice(),si:0,err:0,busy:0};lvBar();
+$('#gb').innerHTML=`<h3>Level ${i+1} · ${S?'Stack (LIFO)':'Queue (FIFO)'}</h3><p>${L[1]}</p><p class="case">🌍 <b style="display:inline">Di dunia nyata:</b> ${K[i]}</p><div>Target: <span class="pill">${L[5].join(' → ')}</span> <span class="pill">Kapasitas ${L[2]}</span></div><p>Berikutnya masuk: <b id="nx"></b></p><div style="display:flex;gap:10px;align-items:flex-start"><span id="hp" class="av" style="font-size:46px">${S?'🧑‍🍳':'🧑‍💼'}</span><div class="vis ${S?'sv':''}" id="gv" style="flex:1;min-width:0"></div></div><div class="row"><button class="pri" id="ga">${S?'Push':'Enqueue'}</button><button id="gr">${S?'Pop':'Dequeue'}</button><button onclick="play(${i})">↺ Ulang</button></div><div class="msg" id="gm"></div>`;
+draw($('#gv'),g.a,S,EM);nxt();
+$('#ga').onclick=()=>{if(g.busy)return;const m=$('#gm');if(g.si>=L[4].length){g.err++;m.textContent='Tidak ada item baru lagi.';return}
+if(g.a.length>=L[2]){g.err++;m.textContent='⚠️ Overflow! Kapasitas penuh.';return}m.textContent='';addA($('#gv'),g.a,S,L[4][g.si++],EM);hp();nxt();chk()};
+$('#gr').onclick=()=>{if(g.busy)return;const m=$('#gm');if(!g.a.length){g.err++;m.textContent='⚠️ Underflow! Tidak ada elemen.';return}
+g.busy=1;m.textContent='';remA($('#gv'),g.a,S,v=>{m.textContent=(S?'Diambil: ':'Dilayani: ')+v;g.busy=0;chk()},EM);hp()}}
+const nxt=()=>{const L=G[gi];$('#nx').textContent=L[4][g.si]||'(habis)'};
+function chk(){const L=G[gi];if(JSON.stringify(g.a)!=JSON.stringify(L[5]))return;const sc=Math.max(30,100-g.err*10);ST.game[gi]=sc;lvBar();prog();
+confetti({particleCount:160,spread:80,origin:{y:.6}});
+$('#mc').innerHTML=`<h2>🎉 Level ${gi+1} selesai!</h2><p>Skor: <b>${sc}</b> (${g.err} kesalahan)</p><div class="row" style="justify-content:center">${gi<9?`<button class="pri" onclick="nextL()">Level berikutnya</button>`:''}<button onclick="$('#modal').classList.remove('on')">Tutup</button></div>`;
+$('#modal').classList.add('on');anim('#mc',{scale:.6,opacity:0,duration:.5,ease:'back.out(2)'})}
+function nextL(){$('#modal').classList.remove('on');play(gi+1)}
+play(0);
+
+// LKPD
+const P=[['LIFO','Terakhir masuk, pertama keluar'],['FIFO','Pertama masuk, pertama keluar'],['Push','Menambah elemen ke Stack'],['Pop','Mengambil elemen teratas Stack'],['Tos','Penunjuk elemen teratas Stack'],['Enqueue','Memasukkan elemen ke belakang Queue'],['Dequeue','Mengeluarkan elemen dari depan Queue'],['Front','Elemen terdepan pada Queue'],['Rear','Elemen terbelakang pada Queue']];
+const shuf=a=>a.map(x=>[Math.random(),x]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);let sel=null;
+$('#bank').innerHTML=shuf(P).map(p=>`<span class="term" draggable="true" data-t="${p[0]}">${p[0]}</span>`).join('');
+$('#slots').innerHTML=shuf(P).map(p=>`<div class="slot" data-a="${p[0]}"><div class="z"></div><span>${p[1]}</span></div>`).join('');
+function drop(sl,t){if(!t||sl.classList.contains('done'))return;const el=document.querySelector(`.term[data-t="${t}"]`);
+if(sl.dataset.a==t){sl.classList.add('done');sl.firstChild.textContent=t;el.remove();ST.m++;$('#lm').textContent='✅ Benar!';prog()}
+else{$('#lm').textContent='❌ Belum tepat, coba lagi.';anim(sl,{x:-8,duration:.08,repeat:4,yoyo:true})}sel=null}
+$('#bank').addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',e.target.dataset.t));
+$('#bank').addEventListener('click',e=>{if(!e.target.dataset.t)return;document.querySelectorAll('.term').forEach(x=>x.classList.remove('sel'));e.target.classList.add('sel');sel=e.target.dataset.t});
+const S2=$('#slots');S2.addEventListener('dragover',e=>{const s=e.target.closest('.slot');if(s){e.preventDefault();s.classList.add('hi')}});
+S2.addEventListener('dragleave',e=>e.target.closest('.slot')?.classList.remove('hi'));
+S2.addEventListener('drop',e=>{e.preventDefault();const s=e.target.closest('.slot');if(s){s.classList.remove('hi');drop(s,e.dataTransfer.getData('text/plain'))}});
+S2.addEventListener('click',e=>{const s=e.target.closest('.slot');s&&sel&&drop(s,sel)});
+const OR=['Push(A)','Push(B)','Pop()','Push(C)'];let dr;
+$('#ord').innerHTML=shuf(OR).map(x=>`<li draggable="true">${x}</li>`).join('');
+$('#ord').addEventListener('dragstart',e=>dr=e.target);
+$('#ord').addEventListener('dragover',e=>{e.preventDefault();const li=e.target.closest('li');if(li&&li!=dr){const r=li.getBoundingClientRect();li.parentNode.insertBefore(dr,e.clientY<r.top+r.height/2?li:li.nextSibling)}});
+function chkOrd(){const cur=[...document.querySelectorAll('#ord li')].map(x=>x.textContent);ST.ord=cur.join()==OR.join();$('#om').textContent=ST.ord?'✅ Urutan benar! Hasil: [A, C]':'❌ Belum benar. Ingat: Pop mengambil elemen teratas.';prog()}
+
+// FINISH
+function finish(){const nm=$('#nm').value.trim();if(!nm){alert('Isi nama lengkap dulu.');$('#nm').focus();return}
+confetti({particleCount:220,spread:100,origin:{y:.6}});
+const tot=Math.round((gAvg()+lkS())/2),d=new Date().toLocaleDateString('id-ID',{dateStyle:'long'});
+$('#cert').innerHTML=`<div style="border:6px double #6366f1;padding:28px"><h1 style="text-align:center;color:#4338ca;margin:0">Sertifikat Belajar</h1><p style="text-align:center;margin:4px 0 20px">Struktur Data: Stack &amp; Queue</p>
+<table style="width:100%;font-size:14px;border-collapse:collapse"><tr><td style="padding:5px"><b>Nama</b></td><td>${esc(nm)}</td></tr><tr><td style="padding:5px"><b>Kelas</b></td><td>${esc($('#kl').value)}</td></tr><tr><td style="padding:5px"><b>Tanggal</b></td><td>${d}</td></tr><tr><td style="padding:5px"><b>Skor Game (10 level)</b></td><td>${gAvg()}</td></tr><tr><td style="padding:5px"><b>Nilai LKPD</b></td><td>${lkS()}</td></tr><tr><td style="padding:5px"><b>Nilai Akhir</b></td><td><b>${tot}</b></td></tr></table>
+<h3 style="margin-top:18px">Catatan pemahaman</h3><p style="white-space:pre-wrap">${esc($('#cp').value)||'-'}</p><h3>Contoh Stack/Queue di rumah</h3><p style="white-space:pre-wrap">${esc($('#ct').value)||'-'}</p></div>`;
+setTimeout(()=>html2pdf().set({margin:10,filename:'Sertifikat-StackQueue-'+nm.replace(/\s+/g,'_')+'.pdf',html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4'}}).from($('#cert')).save(),700)}
+show('home');
+</script></body></html>
